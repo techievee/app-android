@@ -1,5 +1,6 @@
 package org.coepi.android.ui.extensions.rx
 
+import com.tapadoo.alerter.OnHideAlertListener
 import io.reactivex.Observable
 import io.reactivex.Observable.empty
 import io.reactivex.Observable.just
@@ -12,11 +13,11 @@ import org.coepi.android.ui.common.UINotificationData
 /**
  * Maps to error notifications and optionally a success notification for the operation state.
  */
-fun <T> Observable<OperationState<T>>.toNotification(successMessage: String? = null): Observable<UINotificationData> =
+fun <T> Observable<OperationState<T>>.toNotification(successMessage: String? = null, onHideAlertListener: OnHideAlertListener = OnHideAlertListener{}): Observable<UINotificationData> =
     flatMap {
         when (it) {
             is Success -> successMessage?.let {
-                just(UINotificationData.Success(successMessage))
+                just(UINotificationData.Success(successMessage, onHideAlertListener))
             } ?: empty()
             is Failure -> just(UINotificationData.Failure(
                 it.t.message ?: "Unknown error"

@@ -2,6 +2,7 @@ package org.coepi.android.ui.symptoms
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.tapadoo.alerter.OnHideAlertListener
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
@@ -19,17 +20,20 @@ import org.coepi.android.repo.SymptomRepo
 import org.coepi.android.system.Resources
 import org.coepi.android.ui.common.UINotificationData
 import org.coepi.android.ui.extensions.rx.toNotification
+import org.coepi.android.ui.navigation.NavigationCommand.Back
+import org.coepi.android.ui.navigation.RootNavigation
 
 class SymptomsViewModel(
     private val symptomRepo: SymptomRepo,
-    resources: Resources
+    resources: Resources,
+    private val rootNav : RootNavigation
 ) : ViewModel() {
 
     val isInProgress: LiveData<Boolean> = symptomRepo.sendReportState
         .toIsInProgress().toLiveData()
 
     val notification: LiveData<UINotificationData> = symptomRepo.sendReportState
-        .toNotification(resources.getString(symptoms_success_message)).toLiveData()
+        .toNotification(resources.getString(symptoms_success_message), OnHideAlertListener { rootNav.navigate(Back) }).toLiveData()
 
     private val selectedSymptomIds: BehaviorSubject<Set<String>> =
         BehaviorSubject.createDefault(emptySet())

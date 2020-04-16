@@ -51,7 +51,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get(), get(), get()) }
-    viewModel { SymptomsViewModel(get(), get()) }
+    viewModel { SymptomsViewModel(get(), get(), get()) }
     viewModel { AlertsViewModel(get(), get()) }
     viewModel { SettingsViewModel() }
     viewModel { CENViewModel(get(), get(), get()) }
